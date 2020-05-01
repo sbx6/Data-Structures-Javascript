@@ -9,27 +9,28 @@
 		* Open addressing
 
 	We will try to implementing to see how It's working.
-	*/
+*/
 
-	function HashTable() {
- 	// The total number of buckets is usually a prime number
- 	this._bucketSize = 31;
- 	this._buckets = [];
- 	this._buckets.length = this._bucketSize;
- }
+function HashTable() {
+    // The total number of buckets is usually a prime number
+    this._bucketSize = 31;
+    this._buckets = [];
+    this._buckets.length = this._bucketSize;
+}
 
- HashTable.prototype.computeHash = function(key) {
- 	var total = 0;
+HashTable.prototype.computeHash = function (key) {
+    var total = 0;
 
- 	for(let i = 0; i < key.length; i++) {
- 		total += key.charCodeAt(i);
- 	}
+    for (let i = 0; i < key.length; i++) {
+        total += key.charCodeAt(i);
+    }
 
- 	return total % this._bucketSize;
- };
+    return total % this._bucketSize;
+};
 
 
 // Simple implementation of put method
+
 // HashTable.prototype.put = function(key, value) {
 // 	var hash = this.computeHash(key);
 
@@ -40,10 +41,11 @@
 // };
 
 /*******************************
- 	IMPLEMENTING OUR PUT&GET FUNCTIONS USING SEPARATE CHAINING
- 	********************************/
+ IMPLEMENTING OUR PUT&GET FUNCTIONS USING SEPARATE CHAINING
+ ********************************/
 
 // Implementing our put function using separate chaining
+
 // HashTable.prototype.put = function(key, value) {
 // 	var keyType = typeof(key);
 
@@ -64,6 +66,7 @@
 // };
 
 // Implementing our get function using separate chaining
+
 // HashTable.prototype.get = function(key) {
 // 	var keyType = typeof(key);
 
@@ -81,83 +84,83 @@
 // };
 
 /*******************************
- 	IMPLEMENTING OUR PUT&GET FUNCTIONS USING OPEN ADDRESSING
- 	********************************/
- 	HashTable.prototype.put = function(key, value) {
- 		var keyType = typeof(key);
+ IMPLEMENTING OUR PUT&GET FUNCTIONS USING OPEN ADDRESSING
+ ********************************/
+HashTable.prototype.put = function (key, value) {
+    var keyType = typeof (key);
 
- 		if(keyType !== 'string' && keyType !== 'number')
- 			throw 'Only string or number keys are allowed/supported'; 
+    if (keyType !== 'string' && keyType !== 'number')
+        throw 'Only string or number keys are allowed/supported';
 
- 		var hash = this.computeHash(key);
+    var hash = this.computeHash(key);
 
- 	// Yeap No collision found
- 	if(this._buckets[hash] === undefined) {
- 		this._buckets[hash] = {};
- 		this._buckets[hash][key] = value;
- 		return;
- 	} else if (this._buckets[hash].hasOwnProperty(key)) {
- 		// Duplicate Key
- 		throw 'Duplicate Key is not allowed';
- 	}
+    // Yeap No collision found
+    if (this._buckets[hash] === undefined) {
+        this._buckets[hash] = {};
+        this._buckets[hash][key] = value;
+        return;
+    } else if (this._buckets[hash].hasOwnProperty(key)) {
+        // Duplicate Key
+        throw 'Duplicate Key is not allowed';
+    }
 
- 	// Collision found
- 	// Let's find next available slot
- 	var bucketId = hash + 1;
+    // Collision found
+    // Let's find next available slot
+    var bucketId = hash + 1;
 
- 	do {
- 		// Reached the end. 
-    	// Start from the beginning
-    	if(bucketId >= this._bucketSize) bucketId = 0;
+    do {
+        // Reached the end.
+        // Start from the beginning
+        if (bucketId >= this._bucketSize) bucketId = 0;
 
-    	if(this._buckets[bucketId] === undefined) {
- 			// Found empty slot
- 			this._buckets[bucketId] = {};
- 			this._buckets[bucketId][key] = value;
- 			return;
- 		}
- 		bucketId++;
+        if (this._buckets[bucketId] === undefined) {
+            // Found empty slot
+            this._buckets[bucketId] = {};
+            this._buckets[bucketId][key] = value;
+            return;
+        }
+        bucketId++;
 
- 	}while(bucketId != hash);
+    } while (bucketId != hash);
 
- 	// Couldn't find any free slots
- 	throw 'Hash table is full!';
- };
+    // Couldn't find any free slots
+    throw 'Hash table is full!';
+};
 
- HashTable.prototype.get = function(key) {
- 	var keyType = typeof(key);
- 	if (keyType !== 'string' && keyType !== 'number') return undefined;
+HashTable.prototype.get = function (key) {
+    var keyType = typeof (key);
+    if (keyType !== 'string' && keyType !== 'number') return undefined;
 
- 	var hash = this.computeHash(key);
+    var hash = this.computeHash(key);
 
- 	if (this._buckets[hash] === undefined) {
- 		return undefined;
- 	} else if (this._buckets[hash].hasOwnProperty(key)) {
-    // Key found. Return value
-    return this._buckets[hash][key];
-}
+    if (this._buckets[hash] === undefined) {
+        return undefined;
+    } else if (this._buckets[hash].hasOwnProperty(key)) {
+        // Key found. Return value
+        return this._buckets[hash][key];
+    }
 
-  // Possible Collision.
-  var bucketId = hash + 1;
-  
-  do {
-  	// Reached the end. 
-    // Start from the beginning
-    if (bucketId >= this._bucketSize) bucketId = 0;
+    // Possible Collision.
+    var bucketId = hash + 1;
 
-    if (this._buckets[bucketId] === undefined) {
-      // Found an empty slot
-      return undefined;
-  } else if (this._bucekts[bucketId].hasOwnProperty(key)) {
-      // Key found. Return value
-      return this._buckets[hash][key];
-  }
+    do {
+        // Reached the end.
+        // Start from the beginning
+        if (bucketId >= this._bucketSize) bucketId = 0;
 
-  bucketId++;
-} while (bucketId != hash);
+        if (this._buckets[bucketId] === undefined) {
+            // Found an empty slot
+            return undefined;
+        } else if (this._bucekts[bucketId].hasOwnProperty(key)) {
+            // Key found. Return value
+            return this._buckets[hash][key];
+        }
 
-  // Couldn't find the key.
-  return undefined;
+        bucketId++;
+    } while (bucketId != hash);
+
+    // Couldn't find the key.
+    return undefined;
 };
 
 
