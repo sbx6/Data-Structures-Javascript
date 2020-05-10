@@ -1,8 +1,10 @@
 /*
 	A Hash Tabel is a data structure that is used to implement an associative array of key and value.
 	It is designed around an array where each array cell is called bucket. Each bucket contains a list of key/value pairs.
+
 	When this key/value pair is inserted into hashtable, we first compute it's destination bucket, we deterimne this bucket by applying
 	a special function on the key which is known as hash function. So every hash function returns a number based on the key. This number is the bucket id.
+
 	When we have to add a key/value pair to a bucket that already has one or more key value pairs, we say that a collision has occurred.
 	There are two basic techniques to handle collisions in hash tables:
 		* Separate chaining
